@@ -14,11 +14,17 @@ var engine = function() {
 
       $('.generate').on('click', function() {
           $('.generate').hide();
+          $('.choices').hide();
+          $('.result').removeClass('correct').removeClass('incorrect');
+          $('.result').hide();
           currentQuestion = generateQuestion();
           $('.question').text(currentQuestion.type.display);
           $('.choices').html('');
           $('.result').html('');
-          rollChoice(0, currentQuestion, 90);
+          $('.choices').fadeIn(500, function() {
+              rollChoice(0, currentQuestion, 90);
+          });
+
       });
   };
 
@@ -117,7 +123,7 @@ var engine = function() {
 
   getUntakenChoice = function(taken, allChoices, qt) {
   	var answerChoice = getCorrectChoice(taken, qt),
-        takenIds = taken.map(fcuntion(item) { return item.id; }).join('|'),
+        takenIds = taken.map(function(item) { return item.id; }).join('|'),
         upperLimit = 0,
         lowerLimit = 0,
         orderBit = (qt.order && qt.order === 'desc')? -1 : 1,
@@ -218,10 +224,11 @@ var engine = function() {
               if(currentStreak <= 0 && result.isCorrect) { currentStreak = 0; }
               if(currentStreak >= 0 && !result.isCorrect) { currentStreak = 0; }
               currentStreak += result.isCorrect ? 1 : -1;
-              console.log('streak: ' + currentStreak);
               $('.result').text(result.display);
               $('.choice[data-id="' + result.incorrectId + '"]').addClass('incorrect');
               $('.choice[data-id="' + result.correctId + '"]').addClass('correct');
+              $('.result').addClass(result.isCorrect? 'correct' : 'incorrect');
+              $('.result').show();
               enableAnswers(false);
               $('.generate.next').show();
           });
