@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/engine.js"></script>
+    <script type="text/javascript" src="data/elder-statesmen.json"></script>
+    <script type="text/javascript" src="data/question-types.json"></script>
+    <script type="text/javascript" src="data/result-types.json"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+    <div class="generate">Start Game</div>
+    <div class="question"></div>
+    <ul class="choices"></ul>
+    <div class="result"></div>
+    <div class="generate next">Next Question</div>
+  </body>
+
+  <script>
+      engine.init(elderStatesmen, questionTypes, resultTypes);
+  </script>
+</html>
