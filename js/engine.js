@@ -55,7 +55,7 @@ var engine = function() {
       if(resultDetail.indexOf('{diff}') > 0) { isPlural = detailDiff > 1; }
       if(resultDetail.indexOf('{ival}') > 0) { isPlural = detailIncorrectValue > 1; }
       if(isPlural && detailParsed.length > 1) { finalResult += detailParsed[1]; }
-      if(!isPlural && detailParsed.length > 2) { finalResult += detailParsed[2]; } 
+      if(!isPlural && detailParsed.length > 2) { finalResult += detailParsed[2]; }
 
       finalResult = finalResult.split('{cname}').join(correctAnswer.name)
           .split('{iname}').join(answer.name)
@@ -117,12 +117,14 @@ var engine = function() {
 
   getUntakenChoice = function(taken, allChoices, qt) {
   	var answerChoice = getCorrectChoice(taken, qt),
+        takenIds = taken.map(fcuntion(item) { return item.id; }).join('|'),
         upperLimit = 0,
         lowerLimit = 0,
         orderBit = (qt.order && qt.order === 'desc')? -1 : 1,
         choices = $.grep(allChoices.slice(), function(choice) {
             if(answerChoice) {
-                return (choice[qt.calculation] != answerChoice[qt.calculation]);
+                return (choice[qt.calculation] != answerChoice[qt.calculation])
+                    && takenIds.indexOf(choice.id) < 0;
             }
             return true;
         }),
