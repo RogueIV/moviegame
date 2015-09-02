@@ -22,6 +22,7 @@ var engine = function() {
           $('.choices').html('');
           $('.result').html('');
           $('.choices').fadeIn(500, function() {
+              $('.choices').css('display', 'flex');
               rollChoice(0, currentQuestion, 90);
           });
 
@@ -175,7 +176,12 @@ var engine = function() {
               writing: datum.credits.writing,
               wins: datum.oscars.wins,
               nominations: datum.oscars.nominations,
-              honorary: datum.oscars.honorary
+              honorary: datum.oscars.honorary,
+              firstCredit: datum.credits.first,
+              lastCredit: datum.credits.last,
+              career: (datum.credits.first > 0 && datum.credits.last > 0) ? (datum.credits.last - datum.credits.first) : 0,
+              isActive: datum.credits.last ? datum.credits.last >= new Date().getFullYear() : false,
+              image: datum.image
           };
       });
   };
@@ -225,8 +231,8 @@ var engine = function() {
               if(currentStreak >= 0 && !result.isCorrect) { currentStreak = 0; }
               currentStreak += result.isCorrect ? 1 : -1;
               $('.result').text(result.display);
-              $('.choice[data-id="' + result.incorrectId + '"]').addClass('incorrect');
-              $('.choice[data-id="' + result.correctId + '"]').addClass('correct');
+              $('.choice[data-id="' + result.incorrectId + '"] > .overlay').addClass('incorrect');
+              $('.choice[data-id="' + result.correctId + '"] > .overlay').addClass('correct');
               $('.result').addClass(result.isCorrect? 'correct' : 'incorrect');
               $('.result').show();
               enableAnswers(false);
@@ -243,7 +249,11 @@ var engine = function() {
           if(isAdmin) {
               $('.choices').append('<li class="choice" data-id="' + choice.id + '">' + choice.name + ' (' + choice[question.type.calculation] + ')</li>');
           } else {
-              $('.choices').append('<li class="choice" data-id="' + choice.id + '">' + choice.name + '</li>');
+              $('.choices').append('<li class="choice" data-id="' + choice.id + '">'
+                  + (choice.image ? ('<img src="' + choice.image + '">') : '')
+                  + '<div class="overlay"></div>'
+                  + '<div class="nametag' + (choice.image ? '' : ' middle') + '">' + choice.name + '</div>'
+                  + '</li>');
           }
           setTimeout(function() {
               rollChoice(index + 1, question, delay);
