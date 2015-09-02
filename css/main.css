@@ -63,12 +63,13 @@ body {
   color: #ffffff;
   font-size: 1.5em;
   text-shadow: 2px 2px #05076d;
+	max-width: 680px;
 }
 
 header {
 	text-align: center;
 	width: 100%;
-	max-width: 480px;
+	max-width: 680px;
 }
 
 .choices {
@@ -177,6 +178,7 @@ header {
   border-radius: 4px;
   cursor: pointer;
   color: #ffffff;
+	max-width: 680px;
 }
 
 .generate:hover {
@@ -193,11 +195,12 @@ header {
   color: #ffffff;
   margin-left: -10px;
   margin-bottom: 10px;
+	max-width: 680px;
 }
 
 .categories {
 	width: 100%;
-	max-width: 480px;
+	max-width: 680px;
 	align-items: center;
 	list-style: none;
 	margin: 10px 0 0 0;
@@ -222,7 +225,7 @@ header {
 		color: #ffffff;
 		margin: 8px 0 8px 0;
 		width: 100%;
-		max-width: 480px;
+		max-width: 680px;
 		text-align: center;
 }
 
