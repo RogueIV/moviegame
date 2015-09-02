@@ -5,11 +5,21 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/engine.js"></script>
     <script type="text/javascript" src="data/elder-statesmen.js"></script>
-    <script type="text/javascript" src="data/question-types.js"></script>
+    <script type="text/javascript" src="data/actor-questions.js"></script>
     <script type="text/javascript" src="data/result-types.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
   </head>
   <body>
+    <div class="start-page">
+      <header>The Movie Game</header>
+      <div class="message">Please choose a category:</div>
+      <ul class="categories">
+        <li data-set="elderStatesmen" data-qt="actorQuestions">Elder Statesmen</li>
+        <li data-set="stars" data-qt="actorQuestions">Current Stars</li>
+        <li data-set="movies" data-qt="movieQuestions">Movies</li>
+      </ul>
+      <div class="error">That category is currently unavailable. Please try another.</div>
+    </div>
     <div class="game-board">
       <div class="generate">Start Game</div>
       <div class="question"></div>
@@ -20,6 +30,24 @@
   </body>
 
   <script>
-      engine.init(elderStatesmen, questionTypes, resultTypes);
+      $('.categories > li').on('click', function() {
+          try {
+              var thisData = eval($(this).data('set')),
+                  thisQuestionTypes = eval($(this).data('qt'));
+
+              if(thisData && thisQuestionTypes) {
+                  $('.error').hide();
+                  $('.start-page').hide();
+                  $('.game-board').fadeIn(500, function() {
+                      engine.init(thisData, thisQuestionTypes, resultTypes, true);
+                  });
+              } else {
+                  $('.error').show();
+              }
+          } catch(e) {
+              $('.error').show();
+          }
+      });
+
   </script>
 </html>

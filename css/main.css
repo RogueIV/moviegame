@@ -19,11 +19,15 @@ body {
   overflow-x: hidden;
 }
 
-.game-board {
+.game-board, .start-page {
   bottom: 0px;
   top: 0px;
   padding: 10px;
   position: relative;
+}
+
+.game-board {
+	display: none;
 }
 
 @keyframes popin {
@@ -55,10 +59,16 @@ body {
   }
 }
 
-.question {
+.question, header {
   color: #ffffff;
   font-size: 1.5em;
   text-shadow: 2px 2px #05076d;
+}
+
+header {
+	text-align: center;
+	width: 100%;
+	max-width: 480px;
 }
 
 .choices {
@@ -71,6 +81,10 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     max-width: 370px;
+    animation-name: popin;
+    animation-duration: .25s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
 }
 
 .choice {
@@ -139,7 +153,6 @@ body {
 }
 
 .next {
-    display: none;
     width: 120px;
     float: right;
     margin-bottom: 20px;
@@ -157,6 +170,7 @@ body {
 }
 
 .generate {
+  display: none;
   padding: 15px;
   background: rgba(255,255,255,.25);
   border: 2px solid #9999ff;
@@ -169,7 +183,7 @@ body {
   background: rgba(255,255,255,.5)
 }
 
-.result {
+.result, .error {
   width: 100%;
   padding: 10px;
   border-top: 2px solid #ffffff;
@@ -179,4 +193,42 @@ body {
   color: #ffffff;
   margin-left: -10px;
   margin-bottom: 10px;
+}
+
+.categories {
+	width: 100%;
+	max-width: 480px;
+	align-items: center;
+	list-style: none;
+	margin: 10px 0 0 0;
+	padding: 0;
+}
+
+.categories > li {
+    padding: 10px;
+    background: rgba(255, 255, 255, .8);
+    border: 2px solid #cccccc;
+    border-radius: 8px;
+    cursor: pointer;
+    animation-name: popin;
+    animation-duration: .35s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    margin-top: 2px;
+    overflow: hidden;
+}
+
+.message {
+		color: #ffffff;
+		margin: 8px 0 8px 0;
+		width: 100%;
+		max-width: 480px;
+		text-align: center;
+}
+
+.error {
+	display: none;
+	background-color: rgba(255,0,0,.5) !important;
+	border-color: red;
+	margin-top: 15px;
 }

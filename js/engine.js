@@ -6,27 +6,31 @@ var engine = function() {
       normalizeData, getRandomItem, sortChoices, calculateAgeSpan,
       enableAnswers, rollChoice;
 
-  initialize = function(data, qtList, rtList) {
+  initialize = function(data, qtList, rtList, startImmediately) {
       questionTypes = qtList || questionTypes;
       resultTypes = rtList || resultTypes;
       dataAll = normalizeData(data);
       currentStreak = 0;
 
       $('.generate').on('click', function() {
-          $('.generate').hide();
-          $('.choices').hide();
-          $('.result').removeClass('correct').removeClass('incorrect');
-          $('.result').hide();
-          currentQuestion = generateQuestion();
-          $('.question').text(currentQuestion.type.display);
-          $('.choices').html('');
-          $('.result').html('');
-          $('.choices').fadeIn(500, function() {
-              $('.choices').css('display', 'flex');
-              rollChoice(0, currentQuestion, 90);
-          });
-
+          startNewQuestion();
       });
+
+      if(startImmediately) { startNewQuestion(); } else { $('.generate')[0].show(); }
+  };
+
+  startNewQuestion = function() {
+      $('.generate').hide();
+      $('.choices').hide();
+      $('.result').removeClass('correct').removeClass('incorrect');
+      $('.result').hide();
+      currentQuestion = generateQuestion();
+      $('.question').text(currentQuestion.type.display);
+      $('.choices').html('');
+      $('.result').html('');
+      $('.choices').show();
+      $('.choices').css('display', 'flex');
+      rollChoice(0, currentQuestion, 90);
   };
 
   generateQuestion = function() {
