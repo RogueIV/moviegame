@@ -6,10 +6,10 @@ var engine = function() {
       normalizeData, getRandomItem, sortChoices, calculateAgeSpan,
       enableAnswers, rollChoice;
 
-  initialize = function(data, qtList, rtList, startImmediately) {
-      questionTypes = qtList || questionTypes;
-      resultTypes = rtList || resultTypes;
-      dataAll = normalizeData(data);
+  initialize = function(data, qt, rtList, startImmediately) {
+      questionTypes = qt.questionTypes;
+      resultTypes = rtList;
+      dataAll = qt.normalizeData(data) || data;
       currentStreak = 0;
 
       $('.generate').on('click', function() {
@@ -52,15 +52,26 @@ var engine = function() {
           isPlural = detailValue > 1,
           finalResult = detailParsed[0];
 
-      if(qt.calculation === 'birth') {
-          detailValue = calculateAgeSpan(answer.birth, new Date());
+      if(qt.calculationType === 'date') {
+          if(qt.valueFrom) {
+            detailValue = calculateAgeSpan(detailValue, qt.valueFrom);
+            detailIncorrectValue = calculateAgeSpan(detailIncorrectValue, qt.valueFrom);
+          } else {
+            detailValue = detailValue.getFullYear();
+            detailIncorrectValue = detailIncorrectValue.getFullYear();
+          }
           if(!isCorrect) {
-              if(answer.birth > correctAnswer.birth) {
-                  detailDiff = calculateAgeSpan(answer.birth, correctAnswer.birth);
+              if(answer[qt.calculation] > correctAnswer[qt.calculation]) {
+                  detailDiff = calculateAgeSpan(answer[qt.calculation], correctAnswer[qt.calculation]);
               } else {
-                  detailDiff = calculateAgeSpan(answer.birth, correctAnswer.birth);
+                  detailDiff = calculateAgeSpan(answer[qt.calculation], correctAnswer[qt.calculation]);
               }
           }
+      }
+      if(qt.calculationType == 'currency') {
+          detailValue = '$' + detailValue.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").replace('.00','');
+          detailIncorrectValue = '$' + detailIncorrectValue.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").replace('.00','');
+          detailDiff = '$' + detailDiff.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").replace('.00','');
       }
 
       if(resultDetail.indexOf('{diff}') > 0) { isPlural = detailDiff > 1; }
@@ -145,7 +156,7 @@ var engine = function() {
           upperLimit = answerChoice[qt.calculation] + qt.spread;
           upperLimit = answerChoice[qt.calculation] - qt.spread;
 
-          if(qt.calculation == 'birth') {
+          if(qt.calculationType == 'date') {
               upperLimit = new Date('1/1/' + answerChoice[qt.calculation].getFullYear() + (qt.spread));
               lowerLimit = new Date('1/1/' + answerChoice[qt.calculation].getFullYear() - (qt.spread));
           }
@@ -167,29 +178,6 @@ var engine = function() {
       return null;
   }
 
-  normalizeData = function(raw) {
-      return raw.map(function(datum) {
-          return {
-              id: datum.name.toLowerCase().split(' ').join('').split('\'').join('').split('.').join(''),
-              name: datum.name,
-              birth: new Date(datum.birth),
-              birthdate: datum.birth,
-              acting: datum.credits.acting,
-              directing: datum.credits.directing,
-              producing: datum.credits.producing,
-              writing: datum.credits.writing,
-              wins: datum.oscars.wins,
-              nominations: datum.oscars.nominations,
-              honorary: datum.oscars.honorary,
-              firstCredit: datum.credits.first,
-              lastCredit: datum.credits.last,
-              career: (datum.credits.first > 0 && datum.credits.last > 0) ? (datum.credits.last - datum.credits.first) : 0,
-              isActive: datum.credits.last ? datum.credits.last >= new Date().getFullYear() : false,
-              image: datum.image
-          };
-      });
-  };
-
   getRandomItem = function(list, weightBy)
   {
       var isWeighted = weightBy && list[0][weightBy];
@@ -209,11 +197,11 @@ var engine = function() {
       });
   };
 
-  calculateAgeSpan = function(birthDate, otherDate, showYearsOnly) {
+  calculateAgeSpan = function(targetDate, otherDate, showYearsOnly) {
       var oneDay = 24*60*60*1000,
-  		firstDate = new Date(birthDate),
-  		secondDate = new Date(otherDate),
-  		days = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
+      		firstDate = new Date(targetDate),
+      		secondDate = new Date(otherDate),
+      		days = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
           months = Math.floor(days/30),
           years = Math.floor(days/365.24);
 
