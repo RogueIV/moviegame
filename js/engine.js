@@ -12,7 +12,7 @@ var engine = function() {
       dataAll = qt.normalizeData(data) || data;
       currentStreak = 0;
 
-      $('.generate').on('click', function() {
+      $('.next').on('click', function() {
           startNewQuestion();
       });
 
@@ -20,7 +20,6 @@ var engine = function() {
   };
 
   startNewQuestion = function() {
-      $('.generate').hide();
       $('.choices').hide();
       $('.result').removeClass('correct').removeClass('incorrect');
       $('.result').hide();
@@ -248,7 +247,6 @@ var engine = function() {
               $('.result').addClass(result.isCorrect? 'correct' : 'incorrect');
               $('.result').show();
               enableAnswers(false);
-              $('.generate.next').show();
           });
       }
   };
