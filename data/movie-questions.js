@@ -15,7 +15,8 @@ var movieQuestions = {
         { id: 'boxnet2', frequency: 1, choiceCount: 2, calculation: 'profit', calculationType: 'currency', order: 'desc', spread: 50000000, minimum: 5000000, display: 'Which film was more PROFITABLE?',correct: 'recepits for {cname} exceeded costs by {val}', incorrect: '{iname} was {diff} less profitable'},
         { id: 'boxnet0', frequency: 0.5, choiceCount: 4, calculation: 'profit', calculationType: 'currency', order: 'desc', spread: 100000000, where: 0, display: 'Which film FAILED to make money?', correct: '{cname} was a box office bust', incorrect: '{iname} actually made {ival}'},
         { id: 'oscrwin', frequency: 1, choiceCount: 4, calculation: 'wins', order: 'desc', spread: 5, display: 'Which movie boasts the most Academy Award WINS?',correct: '{cname} won a total of {val} |oscars|oscar', incorrect: '{cname} won {val} more |oscars than {iname}|oscar than {iname}'},
-        { id: 'oscrnom', frequency: 1, choiceCount: 3, calculation: 'nominations', order: 'desc', minimum: 1, spread: 8, display: 'Which film had the most Academy Award NOMINATIONS?', correct: '{cname} was nominated {val} times', incorrect: '{cname} was nominated for {diff} more \awards|award'}
+        { id: 'oscrnom', frequency: 1, choiceCount: 3, calculation: 'nominations', order: 'desc', minimum: 1, spread: 8, display: 'Which film had the most Academy Award NOMINATIONS?', correct: '{cname} was nominated {val} times', incorrect: '{cname} was nominated for {diff} more |awards|award'},
+        { id: 'quotes4', frequency: 1.2, choiceCount: 4, calculation: 'quotes', calculationType: 'list', minimum: 1, display: 'QUOTE: "{val}"', correct: 'The quote was from {cname}', incorrect: 'The quote was from {cname}'}
     ],
     normalizeData: function(raw) {
         return raw.map(function(datum) {
@@ -32,6 +33,8 @@ var movieQuestions = {
                 nominations: datum.oscars.nominations,
                 criticScore: datum.rt.criticScore,
                 audienceScore: datum.rt.audienceScore,
+                quotes: datum.quotes,
+                quotesCount: datum.quotes? datum.quotes.length : 0,
                 image: datum.image
             };
         });

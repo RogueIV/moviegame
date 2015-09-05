@@ -25,7 +25,7 @@ var engine = function() {
       $('.result').removeClass('correct').removeClass('incorrect');
       $('.result').hide();
       currentQuestion = generateQuestion();
-      $('.question').text(currentQuestion.type.display);
+      $('.question').text(currentQuestion.display);
       $('.choices').html('');
       $('.result').html('');
       $('.choices').show();
@@ -34,8 +34,17 @@ var engine = function() {
   };
 
   generateQuestion = function() {
-      var question = { type: getRandomItem(questionTypes, 'frequency') };
+      var question = { type: getRandomItem(questionTypes, 'frequency') },
+          displayValues = '';
+
       question.choices = getAnswerChoices(dataAll, question.type);
+      question.display = question.type.display;
+      if(question.type.calculationType === 'list') {
+          displayValues = $.grep(question.choices, function(choice) {
+              return choice.correct;
+          })[0][question.type.calculation];
+          question.display = question.display.split('{val}').join(getRandomItem(displayValues));
+      }
       return question;
   };
 
@@ -111,9 +120,11 @@ var engine = function() {
 
       if(qt.minimum) {
           allChoices = $.grep(allChoices, function(choice) {
+              if(qt.calculationType === 'list') { return true; }
               return choice[qt.calculation] >= qt.minimum;
           });
       }
+
       if(qt.where >= 0) {
           whereChoices = $.grep(allChoices, function(choice) {
               return choice[qt.calculation] == qt.where;
@@ -124,6 +135,15 @@ var engine = function() {
           allChoices = $.grep(allChoices, function(choice) {
               return choice[qt.calculation] != qt.where;
           });
+      }
+
+      if(qt.calculationType === 'list') {
+          whereChoices = $.grep(allChoices, function(choice) {
+              return choice[qt.calculation + 'Count'] >= qt.minimum;
+          });
+          choice = getUntakenChoice(choices, whereChoices, qt);
+          choice.correct = true;
+          choices.push(choice);
       }
 
       for(var i = choices.length; i < qt.choiceCount; i++) {
