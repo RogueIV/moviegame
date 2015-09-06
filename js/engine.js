@@ -1,18 +1,19 @@
 var engine = function() {
-  var isAdmin = false,
+  var isAdmin = false, statCallback,
       dataAll, questionTypes, ResultTypes, currentQuestion, currentStreak,
       initialize, generateQuestion, checkAnswer,
       generateResult, getAnswerChoices, getUntakenChoice, getCorrectChoice,
       normalizeData, getRandomItem, sortChoices, calculateAgeSpan,
       enableAnswers, rollChoice;
 
-  initialize = function(data, qt, rtList, startImmediately) {
+  initialize = function(data, qt, rtList, startImmediately, callback) {
       questionTypes = qt.questionTypes;
       resultTypes = rtList;
       dataAll = qt.normalizeData(data) || data;
+      statCallback = callback;
       currentStreak = 0;
 
-      $('.next').on('click', function() {
+      $('.next').off('click').on('click', function() {
           startNewQuestion();
       });
 
@@ -247,6 +248,7 @@ var engine = function() {
               $('.result').addClass(result.isCorrect? 'correct' : 'incorrect');
               $('.result').show();
               enableAnswers(false);
+              if(statCallback) { statCallback(result, currentStreak); }
           });
       }
   };

@@ -3,7 +3,9 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/engine.js"></script>
+    <script type="text/javascript" src="data/categories.js"></script>
     <script type="text/javascript" src="data/elder-statesmen.js"></script>
     <script type="text/javascript" src="data/actor-questions.js"></script>
     <script type="text/javascript" src="data/movies80.js"></script>
@@ -15,10 +17,7 @@
     <div class="start-page">
       <header>The Movie Game</header>
       <div class="message">Please choose a category:</div>
-      <ul class="categories">
-        <li data-set="elderStatesmen" data-qt="actorQuestions">Elder Statesmen</li>
-        <li data-set="movies80" data-qt="movieQuestions">80's Movies</li>
-      </ul>
+      <ul class="categories"></ul>
       <div class="error">That category is currently unavailable. Please try another.</div>
     </div>
     <div class="game-board">
@@ -26,27 +25,22 @@
       <ul class="choices"></ul>
       <div class="result next"></div>
     </div>
+    <div class="menu">
+      <ul class="actions">
+          <li data-action="new">New Game</li>
+          <li data-action="reset">Reset Stats</li>
+          <li data-action="continue">Continue</li>
+      </ul>
+      <div class="stats"></div>
+    </div>
+    <div class="menu-button">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
   </body>
 
   <script>
-      $('.categories > li').on('click', function() {
-          try {
-              var thisData = eval($(this).data('set')),
-                  thisQuestionTypes = eval($(this).data('qt'));
-
-              if(thisData && thisQuestionTypes) {
-                  $('.error').hide();
-                  $('.start-page').hide();
-                  $('.game-board').fadeIn(500, function() {
-                      engine.init(thisData, thisQuestionTypes, resultTypes, true);
-                  });
-              } else {
-                  $('.error').show();
-              }
-          } catch(e) {
-              $('.error').show();
-          }
-      });
-
+      game.init(engine, categories, resultTypes);
   </script>
 </html>
